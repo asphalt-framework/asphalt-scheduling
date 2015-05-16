@@ -1,0 +1,5 @@
+[run]
+source = asphalt.tasks
+
+[report]
+show_missing = true
