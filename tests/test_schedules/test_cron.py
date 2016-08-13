@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any
 from typing import Dict
 
@@ -133,20 +133,28 @@ def test_end_time(schedule: CronSchedule, timezone: DstTzInfo):
     assert schedule.get_next_run_time(now) is None
 
 
-def test_dst_forward(timezone: DstTzInfo):
-    schedule = CronSchedule(task_id='task', timezone=timezone, minute='*/5')
-    previous_time = timezone.localize(datetime(2016, 3, 27, 1, 55))
-    now = timezone.localize(datetime(2016, 3, 27, 1, 59))
-    expected = timezone.localize(datetime(2016, 3, 27, 3))
-    assert schedule.get_next_run_time(now, previous_time) == expected
+@pytest.mark.parametrize('args, now, expected', [
+    ({'minute': '*/5'}, datetime(2016, 3, 27, 1, 59), datetime(2016, 3, 27, 3)),
+    ({'hour': 2, 'minute': 30}, datetime(2016, 3, 26, 2, 31), datetime(2016, 3, 28, 2, 30))
+], ids=['jump_forward', 'skip_day'])
+def test_dst_forward(args: Dict[str, Any], now: datetime, expected: datetime, timezone: DstTzInfo):
+    schedule = CronSchedule(task_id='task', timezone=timezone, **args)
+    now = timezone.localize(now)
+    expected = timezone.localize(expected)
+    assert schedule.get_next_run_time(now) == expected
 
 
-def test_dst_backward(timezone: DstTzInfo):
-    schedule = CronSchedule(task_id='task', timezone=timezone, minute='*/5')
-    previous_time = timezone.localize(datetime(2016, 10, 30, 2, 55), is_dst=True)
-    now = timezone.localize(datetime(2016, 10, 30, 2, 59), is_dst=True)
-    expected = timezone.localize(datetime(2016, 10, 30, 2), is_dst=False)
-    assert schedule.get_next_run_time(now, previous_time) == expected
+@pytest.mark.parametrize('args, now, now_dst, expected, expected_dst', [
+    ({'minute': '*/5'}, datetime(2016, 10, 30, 2, 59), True, datetime(2016, 10, 30, 2), False),
+    ({'minute': '*/30'}, datetime(2016, 10, 30, 2, 15), True, datetime(2016, 10, 30, 2, 30),
+     True),
+], ids=['jump_backward', 'forward'])
+def test_dst_backward(args: Dict[str, Any], now: datetime, now_dst: bool, expected: datetime,
+                      expected_dst: bool, timezone: DstTzInfo):
+    schedule = CronSchedule(task_id='task', timezone=timezone, **args)
+    now = timezone.localize(now, is_dst=now_dst)
+    expected = timezone.localize(expected, is_dst=expected_dst)
+    assert schedule.get_next_run_time(now) == expected
 
 
 @pytest.mark.parametrize('kwargs, result', [
