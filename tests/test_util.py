@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 import pytest
 import pytz
 
-from asphalt.tasks.util import datetime_ceil, as_timezone, create_reference, convert_to_datetime
+from asphalt.tasks.util import datetime_ceil, as_timezone, create_reference, convert_to_timezone
 
 
 @pytest.mark.parametrize('input, expected', [
@@ -28,11 +28,11 @@ def test_as_timezone(input, expected):
     (datetime(2016, 7, 24, 16, 36, 51, 134296, timezone.utc),
      datetime(2016, 7, 24, 18, 36, 51, 134296))
 ], ids=['none', 'naive', 'aware'])
-def test_convert_to_datetime(input, expected, timezone):
+def test_convert_to_timezone(input, expected, timezone):
     if expected:
         expected = timezone.localize(expected)
 
-    assert convert_to_datetime(input, timezone) == expected
+    assert convert_to_timezone(input, timezone) == expected
 
 
 def test_create_reference():

@@ -4,7 +4,7 @@ from typing import Optional, Dict, Any
 from typeguard import check_argument_types
 
 from asphalt.tasks.schedules.base import BaseSchedule
-from asphalt.tasks.util import convert_to_datetime
+from asphalt.tasks.util import convert_to_timezone
 
 
 class DateSchedule(BaseSchedule):
@@ -19,7 +19,7 @@ class DateSchedule(BaseSchedule):
     def __init__(self, run_time: datetime, **kwargs):
         assert check_argument_types()
         super().__init__(**kwargs)
-        self.run_time = convert_to_datetime(run_time, self.timezone)
+        self.run_time = convert_to_timezone(run_time, self.timezone)
 
     def get_next_run_time(self, now: datetime,
                           previous_run_time: datetime = None) -> Optional[datetime]:

@@ -28,7 +28,7 @@ def as_timezone(obj: Union[T_PYTZ, str]) -> Optional[T_PYTZ]:
     return pytz.timezone(obj) if isinstance(obj, str) else obj
 
 
-def convert_to_datetime(value: Optional[datetime], timezone: T_PYTZ) -> Optional[datetime]:
+def convert_to_timezone(value: Optional[datetime], timezone: T_PYTZ) -> Optional[datetime]:
     """
     Convert the given object to a timezone aware datetime object.
 

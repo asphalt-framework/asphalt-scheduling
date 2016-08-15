@@ -7,7 +7,7 @@ from typeguard import check_argument_types
 from asphalt.tasks.schedules.base import BaseSchedule
 from asphalt.tasks.schedules.cron.fields import (
     BaseField, WeekField, DayOfMonthField, DayOfWeekField, DEFAULT_VALUES)
-from asphalt.tasks.util import convert_to_datetime, datetime_ceil
+from asphalt.tasks.util import convert_to_timezone, datetime_ceil
 
 FIELDS_MAP = OrderedDict([
     ('year', BaseField),
@@ -49,8 +49,8 @@ class CronSchedule(BaseSchedule):
                  start_time: datetime = None, end_time: datetime = None, **kwargs):
         assert check_argument_types()
         super().__init__(**kwargs)
-        self.start_time = convert_to_datetime(start_time, self.timezone)
-        self.end_time = convert_to_datetime(end_time, self.timezone)
+        self.start_time = convert_to_timezone(start_time, self.timezone)
+        self.end_time = convert_to_timezone(end_time, self.timezone)
         self.fields = self._create_fields(
             year=year, month=month, week=week, day=day, day_of_week=day_of_week, hour=hour,
             minute=minute, second=second)

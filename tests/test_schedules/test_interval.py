@@ -5,7 +5,7 @@ from asphalt.serialization.api import Serializer, CustomizableSerializer
 from pytz.tzinfo import DstTzInfo
 
 from asphalt.tasks.schedules.interval import IntervalSchedule
-from asphalt.tasks.util import convert_to_datetime
+from asphalt.tasks.util import convert_to_timezone
 
 
 @pytest.fixture
@@ -74,9 +74,9 @@ def test_setstate_unhandled_version(schedule: IntervalSchedule):
 ], ids=['before_start', 'previous_runtime', 'after_start'])
 def test_get_next_run_time(schedule: IntervalSchedule, previous_time, now, expected,
                            timezone: DstTzInfo):
-    previous_time = convert_to_datetime(previous_time, timezone)
-    now = convert_to_datetime(now, timezone)
-    expected = convert_to_datetime(expected, timezone)
+    previous_time = convert_to_timezone(previous_time, timezone)
+    now = convert_to_timezone(now, timezone)
+    expected = convert_to_timezone(expected, timezone)
     assert schedule.get_next_run_time(now, previous_time) == expected
 
 

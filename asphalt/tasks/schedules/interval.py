@@ -4,7 +4,7 @@ from typing import Optional, Dict, Any
 from typeguard import check_argument_types
 
 from asphalt.tasks.schedules.base import BaseSchedule
-from asphalt.tasks.util import convert_to_datetime
+from asphalt.tasks.util import convert_to_timezone
 
 
 class IntervalSchedule(BaseSchedule):
@@ -32,8 +32,8 @@ class IntervalSchedule(BaseSchedule):
                  **kwargs):
         assert check_argument_types()
         super().__init__(**kwargs)
-        self.start_time = convert_to_datetime(start_time, self.timezone)
-        self.end_time = convert_to_datetime(end_time, self.timezone)
+        self.start_time = convert_to_timezone(start_time, self.timezone)
+        self.end_time = convert_to_timezone(end_time, self.timezone)
         self.interval = timedelta(weeks=weeks, days=days, hours=hours, minutes=minutes,
                                   seconds=seconds)
 
