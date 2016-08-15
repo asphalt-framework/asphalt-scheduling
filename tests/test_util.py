@@ -3,19 +3,7 @@ from datetime import datetime, timezone
 import pytest
 import pytz
 
-from asphalt.tasks.util import (
-    datetime_to_utc_timestamp, datetime_ceil, as_timezone, create_reference, convert_to_datetime)
-
-
-@pytest.mark.parametrize('input, expected', [
-    (None, None),
-    (datetime(2014, 3, 12, 5, 40, 13, 254012), 1394599213.254012)
-], ids=['none', 'datetime'])
-def test_datetime_to_utc_timestamp(input, expected, timezone):
-    if input:
-        input = timezone.localize(input)
-
-    assert datetime_to_utc_timestamp(input) == expected
+from asphalt.tasks.util import datetime_ceil, as_timezone, create_reference, convert_to_datetime
 
 
 @pytest.mark.parametrize('input, expected', [

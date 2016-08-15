@@ -4,7 +4,7 @@ from typing import Optional, Dict, Any
 from typeguard import check_argument_types
 
 from asphalt.tasks.schedules.base import BaseSchedule
-from asphalt.tasks.util import convert_to_datetime, datetime_to_utc_timestamp
+from asphalt.tasks.util import convert_to_datetime
 
 
 class IntervalSchedule(BaseSchedule):
@@ -45,7 +45,7 @@ class IntervalSchedule(BaseSchedule):
     def get_next_run_time(self, now: datetime,
                           previous_run_time: datetime = None) -> Optional[datetime]:
         if previous_run_time:
-            next_fire_time = previous_run_time + self.interval
+            next_fire_time = self.timezone.normalize(previous_run_time + self.interval)
         elif self.start_time:
             next_fire_time = max(now, self.start_time)
         else:
@@ -54,7 +54,7 @@ class IntervalSchedule(BaseSchedule):
         if self.end_time and next_fire_time > self.end_time:
             return None
         else:
-            return self.timezone.normalize(next_fire_time)
+            return next_fire_time
 
     def __getstate__(self):
         state = super().__getstate__()
@@ -63,9 +63,9 @@ class IntervalSchedule(BaseSchedule):
             'interval': self.interval.total_seconds()
         })
         if self.start_time:
-            state['start_time'] = datetime_to_utc_timestamp(self.start_time)
+            state['start_time'] = self.start_time.timestamp()
         if self.end_time:
-            state['end_time'] = datetime_to_utc_timestamp(self.end_time)
+            state['end_time'] = self.end_time.timestamp()
 
         return state
 

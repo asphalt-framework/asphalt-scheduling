@@ -7,7 +7,7 @@ from typeguard import check_argument_types
 from asphalt.tasks.schedules.base import BaseSchedule
 from asphalt.tasks.schedules.cron.fields import (
     BaseField, WeekField, DayOfMonthField, DayOfWeekField, DEFAULT_VALUES)
-from asphalt.tasks.util import convert_to_datetime, datetime_ceil, datetime_to_utc_timestamp
+from asphalt.tasks.util import convert_to_datetime, datetime_ceil
 
 FIELDS_MAP = OrderedDict([
     ('year', BaseField),
@@ -171,9 +171,9 @@ class CronSchedule(BaseSchedule):
             'fields': {field.name: str(field) for field in self.fields if not field.is_default}
         })
         if self.start_time:
-            state['start_time'] = datetime_to_utc_timestamp(self.start_time)
+            state['start_time'] = self.start_time.timestamp()
         if self.end_time:
-            state['end_time'] = datetime_to_utc_timestamp(self.end_time)
+            state['end_time'] = self.end_time.timestamp()
 
         return state
 

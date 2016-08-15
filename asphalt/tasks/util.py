@@ -1,4 +1,3 @@
-from calendar import timegm
 from datetime import datetime, timedelta
 from typing import Optional, Union
 
@@ -7,19 +6,6 @@ from pytz.tzinfo import DstTzInfo
 from typeguard import check_argument_types
 
 T_PYTZ = Union[type(pytz.utc), DstTzInfo]
-
-
-def datetime_to_utc_timestamp(timeval: Optional[datetime]) -> Optional[float]:
-    """
-    Convert a datetime to a numeric timestamp.
-
-    If ``None`` is passed in, ``None`` is also returned.
-
-    """
-    if timeval is None:
-        return None
-
-    return timegm(timeval.utctimetuple()) + timeval.microsecond / 1000000
 
 
 def datetime_ceil(timeval: datetime) -> datetime:

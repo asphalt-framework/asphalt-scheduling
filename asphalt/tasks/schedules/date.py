@@ -4,7 +4,7 @@ from typing import Optional, Dict, Any
 from typeguard import check_argument_types
 
 from asphalt.tasks.schedules.base import BaseSchedule
-from asphalt.tasks.util import convert_to_datetime, datetime_to_utc_timestamp
+from asphalt.tasks.util import convert_to_datetime
 
 
 class DateSchedule(BaseSchedule):
@@ -29,7 +29,7 @@ class DateSchedule(BaseSchedule):
         state = super().__getstate__()
         state.update({
             'version': 1,
-            'run_time': datetime_to_utc_timestamp(self.run_time)
+            'run_time': self.run_time.timestamp()
         })
         return state
 
