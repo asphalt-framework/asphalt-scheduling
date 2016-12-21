@@ -36,6 +36,14 @@ setup(
         'pytz',
         'tzlocal >= 1.2.2'
     ],
+    extras_require={
+        'testing': [
+            'pytest',
+            'pytest-cov',
+            'pytest-catchlog',
+            'pytest-asyncio >= 0.5.0'
+        ]
+    },
     entry_points={
         'asphalt.components': [
             'taskqueue = asphalt.tasks.component:TaskQueueComponent'
