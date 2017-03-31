@@ -31,8 +31,8 @@ setup(
         'asphalt.tasks'
     ],
     install_requires=[
-        'asphalt ~= 2.0',
-        'asphalt-serialization[cbor] ~= 3.0',
+        'asphalt ~= 3.0',
+        'asphalt-serialization[cbor] ~= 4.0',
         'pytz',
         'tzlocal >= 1.2.2'
     ],
